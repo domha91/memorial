@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hydra + p5 Verse Overlay (720x1280)</title>
+  <style>
+    :root {
+      --w: 720px;
+      --h: 1280px;
+      --iw: 360px;
+      --ih: 640px;
+      --bg: #000;
+    }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: var(--bg);
+      overflow: hidden;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    /* Stage is fixed pixel dimensions for OBS */
+    #stage {
+      position: relative;
+      width: var(--w);
+      height: var(--h);
+      margin: 0 auto;
+      background: #000;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: var(--w);
+      height: var(--h);
+
+      /* Nearest-neighbor scale-up look */
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    #ui {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      z-index: 20;
+    }
+
+    #panel {
+      width: min(560px, 92%);
+      border: 2px solid rgba(255,255,255,0.25);
+      padding: 18px 16px;
+      background: rgba(0,0,0,0.65);
+    }
+
+    #panel h1 {
+      font-size: 18px;
+      margin: 0 0 10px 0;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    #panel p {
+      margin: 8px 0;
+      font-size: 13px;
+      line-height: 1.35;
+      opacity: 0.95;
+    }
+
+    #startBtn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      background: #1E48C7; /* Sapphire */
+      color: #fff;
+      border: 0;
+      cursor: pointer;
+    }
+
+    #startBtn:active { transform: translateY(1px); }
+
+    #hint {
+      margin-top: 10px;
+      font-size: 12px;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="stage">
+    <canvas id="hydra" width="360" height="640"></canvas>
+    <!-- p5 will inject its own canvas; we attach it to #stage and size it to 360x640 -->
+    <div id="ui">
+      <div id="panel">
+        <h1>Start audio-reactive visuals</h1>
+        <p>
+          This page uses your browser microphone permission to react to audio.
+          For a hands-off run, allow mic access once and it will auto-start next time.
+        </p>
+        <button id="startBtn">Enable Audio + Start</button>
+        <div id="hint">
+          If you are routing system audio via PipeWire, select the monitor/virtual mic in Chromium’s site mic settings.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Libraries (CDN). If you need offline operation, download these into ./vendor/ and update the src paths. -->
+  <script src="https://cdn.jsdelivr.net/npm/hydra-synth@1.3.29/dist/hydra-synth.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
+
