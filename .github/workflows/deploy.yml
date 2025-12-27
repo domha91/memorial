@@ -14,10 +14,17 @@ jobs:
       - name: Install rsync
         run: sudo apt-get update && sudo apt-get install -y rsync
 
+      - name: Validate deploy secrets
+        run: |
+          test -n "${{ secrets.DEPLOY_HOST }}" || (echo "Missing secret: DEPLOY_HOST" && exit 1)
+          test -n "${{ secrets.DEPLOY_USER }}" || (echo "Missing secret: DEPLOY_USER" && exit 1)
+          test -n "${{ secrets.DEPLOY_PATH }}" || (echo "Missing secret: DEPLOY_PATH" && exit 1)
+          test -n "${{ secrets.DEPLOY_SSH_KEY }}" || (echo "Missing secret: DEPLOY_SSH_KEY" && exit 1)
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
 
